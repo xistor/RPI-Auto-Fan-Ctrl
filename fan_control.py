@@ -18,23 +18,24 @@ piFan.start()
 def getCpuTemperature():
     res = os.popen('vcgencmd measure_temp').readline()
     temp =(res.replace("temp=","").replace("'C\n",""))
-    #print("temp is {0}".format(temp))
+    print("temp is {0}".format(temp))
     return float(temp)
 
 while True:
-    time.sleep(30)
     temp = getCpuTemperature()
     speed = FAN_LOW + (FAN_HIGH - FAN_LOW) * ((temp - MIN_TEMP) / (MAX_TEMP - MIN_TEMP))
-    #print("Speed : {}".format(speed))
+    if speed > 100.0:
+        speed = 100
+    print("Speed : {}".format(speed))
 
     if temp < MIN_TEMP:
         piFan.setSpeed(0)
-        #print("stop")
+        print("stop")
     elif temp > MAX_TEMP:
         piFan.setSpeed(100)
-        #print("MAX")
+        print("MAX")
     elif temp > ADJ_TEMP:
         piFan.setSpeed(speed)
-        #print("adj")
-    
+        print("adj")
+    time.sleep(30)
 
